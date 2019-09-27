@@ -1,10 +1,14 @@
 #include "Game.h"
 #include <chrono>
+#include <thread>
 #include <ctime>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
 #include <ShlObj.h>
+
+// TODO: figure selection function,
+//       clockwise rotation
 
 namespace fs = std::experimental::filesystem;
 
@@ -36,6 +40,7 @@ int main()
         perror("Error opening file 'Icon.png'");
         abort();
     }
+    window.setActive();
     window.setIcon(37, 37, icon.getPixelsPtr());
     window.setVerticalSyncEnabled(true);
 
@@ -51,12 +56,15 @@ int main()
     sprite.setTexture(texture);
     sprite.setTextureRect(sf::IntRect(0, 0, 800, 700));
 
+    game.init(window);
+
     // set variables
 
     bool start = false, fall = false,
          end = false, pause = false, move = true;
 
     std::chrono::high_resolution_clock::time_point t1, t2;
+    double speed = 0.6f;
 
     // opening file
 
@@ -67,10 +75,10 @@ int main()
 
     file_path.append(L"Record.bin");
 
+    int rec = 0;
     std::ifstream fin(file_path, std::ios::binary);
     if (fin.is_open())
     {
-        int rec;
         fin >> rec;
         game.set_record(rec);
     }
@@ -139,10 +147,26 @@ int main()
                             else if (move && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
                                 game.moving(rotate);
                             move = false;
+
+                            std::this_thread::sleep_for(std::chrono::milliseconds(70));
                         }
 
+                        rec = game.get_record();
+
+                        if (rec >= 50000)
+                            speed = 0.35f;
+                        else if (rec >= 40000)
+                            speed = 0.4f;
+                        else if (rec >= 30000)
+                            speed = 0.45f;
+                        else if (rec >= 20000)
+                            speed = 0.5f;
+                        else if (game.get_record() >= 10000)
+                            speed = 0.55f;
+
                         t2 = std::chrono::high_resolution_clock::now();
-                        if (std::chrono::duration<double>(t2 - t1).count() >= 0.6f)
+
+                        if (std::chrono::duration<double>(t2 - t1).count() >= speed)
                         {
                             if (!game.falling())
                                 fall = !fall;

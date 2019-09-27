@@ -9,11 +9,20 @@ enum moves {rotate = 24, down, right, left, none};
 class Drawing
 {
 private:
+    sf::Texture textures;                 // image of blocks textures
+    sf::Text main_text,     
+             intro_text;    
+    sf::Font main_font,                   // font - unlearne.ttf
+             intro_font;                  // font - pixelchunker.ttf
+    sf::Vector2u size;                    // window size
+
    const std::pair<int, int> offset = std::make_pair(50, 100);
 
    void draw_block(sf::RenderWindow &window, filling color, std::pair<int, int> b_coords);
 
 protected:
+    void drawing_init(sf::RenderWindow& window);
+
    void draw_game_data(sf::RenderWindow &window, int score);
    void draw_field(sf::RenderWindow &window, const Field &area);
    void draw_figure(sf::RenderWindow &window, const Figure &item, const Figure &next, std::pair<int, int> coords);
@@ -40,6 +49,8 @@ private:
 public:
    Game();
    ~Game();
+
+   void init(sf::RenderWindow &window);
 
    void intro(sf::RenderWindow &window);
    void ending(sf::RenderWindow &window);

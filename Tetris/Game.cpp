@@ -5,16 +5,42 @@ bool is_rec_checked = false, is_rec_achieved = false;
 auto absolute = [](int num)
 { return num < 0 ? num * (-1) : num; };
 
+void Drawing::drawing_init(sf::RenderWindow &window)
+{
+    if (!textures.loadFromFile("Stuff/Textures.png", sf::IntRect(0, 0, 289, 37)))
+    {
+        perror("Error opening file 'Textures.png'");
+        abort();
+    }
+
+    if (!main_font.loadFromFile("Stuff/unlearne.ttf"))
+    {
+        perror("Error opening file 'unlearne.ttf'");
+        abort();
+    }
+    main_text.setFont(main_font);
+    main_text.setCharacterSize(60);
+    main_text.setFillColor(sf::Color::Black);
+    main_text.setOutlineColor(sf::Color::White);
+    main_text.setOutlineThickness(1.0f);
+
+    if (!intro_font.loadFromFile("Stuff/pixelchunker.ttf"))
+    {
+        perror("Error opening file 'pixelchunker.ttf'");
+        abort();
+    }
+    intro_text.setFont(intro_font);
+    intro_text.setCharacterSize(120);
+    intro_text.setFillColor(sf::Color::Black);
+    intro_text.setOutlineColor(sf::Color::White);
+    intro_text.setOutlineThickness(1.0f);
+
+    size = window.getSize();
+}
 void Drawing::draw_block(sf::RenderWindow &window, filling color, std::pair<int, int> b_coords)
 {
-   sf::Texture texture;
-   if (!texture.loadFromFile("Stuff/Textures.png", sf::IntRect(0, 0, 289, 37)))
-   {
-      perror("Error opening file 'Textures.png'");
-      abort();
-   }
    sf::Sprite sprite;
-   sprite.setTexture(texture);
+   sprite.setTexture(textures);
    sprite.setTextureRect(sf::IntRect(36 * color, 0, 37, 37));
    sprite.move(sf::Vector2f(b_coords.first, b_coords.second));
    window.draw(sprite);
@@ -22,40 +48,28 @@ void Drawing::draw_block(sf::RenderWindow &window, filling color, std::pair<int,
 
 void Drawing::draw_game_data(sf::RenderWindow &window, int score)
 {
-   sf::Font font;
-   if (!font.loadFromFile("Stuff/unlearne.ttf"))
-   {
-      perror("Error opening file 'unlearne.ttf'");
-      abort();
-   }
-   sf::Text text;
-   text.setFont(font);
-   text.setString("SCORE:");
-   text.setCharacterSize(60);
-   text.setFillColor(sf::Color::Black);
-   text.setOutlineColor(sf::Color::White);
-   text.setOutlineThickness(1.0f);
-   sf::Vector2u size = window.getSize();
-   float text_width = text.getLocalBounds().width,
-      text_height = text.getLocalBounds().height;
-   text.setPosition(size.x - text_width * 2.2f, size.y / 2.0f - text_height * 7.4f);
-   window.draw(text);
+   main_text.setString("SCORE:");
 
-   text.setString(std::to_string(score));
-   text.setPosition(size.x - text_width, size.y / 2.0f - text_height * 7.4f);
-   window.draw(text);
+   float text_width = main_text.getLocalBounds().width,
+      text_height = main_text.getLocalBounds().height;
+   main_text.setPosition(size.x - text_width * 2.2f, size.y / 2.0f - text_height * 7.4f);
+   window.draw(main_text);
 
-   text.setString("NEXT FIGURE:");
-   text.setPosition(size.x - text_width * 2.2f, size.y / 2.0f - text_height * 5.0f);
-   window.draw(text);
+   main_text.setString(std::to_string(score));
+   main_text.setPosition(size.x - text_width, size.y / 2.0f - text_height * 7.4f);
+   window.draw(main_text);
 
-   text.setString("PAUSE: P");
-   text.setPosition(size.x - text_width * 2.2f, size.y / 1.8f);
-   window.draw(text);
+   main_text.setString("NEXT FIGURE:");
+   main_text.setPosition(size.x - text_width * 2.2f, size.y / 2.0f - text_height * 5.0f);
+   window.draw(main_text);
 
-   text.setString("EXIT: ESC");
-   text.setPosition(size.x - text_width * 2.2f, size.y / 1.5f);
-   window.draw(text);
+   main_text.setString("PAUSE: P");
+   main_text.setPosition(size.x - text_width * 2.2f, size.y / 1.8f);
+   window.draw(main_text);
+
+   main_text.setString("EXIT: ESC");
+   main_text.setPosition(size.x - text_width * 2.2f, size.y / 1.5f);
+   window.draw(main_text);
 }
 
 void Drawing::draw_field(sf::RenderWindow &window, const Field &area)
@@ -81,80 +95,42 @@ void Drawing::draw_figure(sf::RenderWindow & window, const Figure &item, const F
 
 void Drawing::draw_intro(sf::RenderWindow &window)
 {
-   sf::Font font;
-   if (!font.loadFromFile("Stuff/pixelchunker.ttf"))
-   {
-      perror("Error opening file 'pixelchunker.ttf'");
-      abort();
-   }
-   sf::Text text;
-   text.setFont(font);
-   text.setString("TETRIS");
-   text.setCharacterSize(120);
-   text.setFillColor(sf::Color::Black);
-   text.setOutlineColor(sf::Color::White);
-   text.setOutlineThickness(1.0f);
-   sf::Vector2u size = window.getSize();
-   float text_width = text.getLocalBounds().width,
-         text_height = text.getLocalBounds().height;
-   text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 3.0f);
-   window.draw(text);
+   intro_text.setString("TETRIS");
 
-   if (!font.loadFromFile("Stuff/unlearne.ttf"))
-   {
-      perror("Error opening file 'unlearne.ttf'");
-      abort();
-   }
-   text.setFont(font);
-   text.setString("PRESS SPACE TO START");
-   text.setCharacterSize(60);
-   text_width = text.getLocalBounds().width;
-   text_height = text.getLocalBounds().height;
-   text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 2.0f);
-   window.draw(text);
+   float text_width = intro_text.getLocalBounds().width,
+         text_height = intro_text.getLocalBounds().height;
+   intro_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 3.0f);
+   window.draw(intro_text);
+
+   main_text.setString("PRESS SPACE TO START");
+   text_width = main_text.getLocalBounds().width;
+   text_height = main_text.getLocalBounds().height;
+   main_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 2.0f);
+   window.draw(main_text);
 }
 
 void Drawing::draw_ending(sf::RenderWindow & window, int score, int &record)
 {
-   sf::Font font;
-   if (!font.loadFromFile("Stuff/pixelchunker.ttf"))
-   {
-      perror("Error opening file 'pixelchunker.ttf'");
-      abort();
-   }
-   sf::Text text;
-   text.setFont(font);
-   text.setString("GAME OVER");
-   text.setCharacterSize(100);
-   text.setFillColor(sf::Color::Black);
-   text.setOutlineColor(sf::Color::White);
-   text.setOutlineThickness(1.0f);
-   sf::Vector2u size = window.getSize();
-   float text_width = text.getLocalBounds().width,
-         text_height = text.getLocalBounds().height;
-   text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 3.0f);
-   window.draw(text);
+   intro_text.setString("GAME OVER");
 
-   if (!font.loadFromFile("Stuff/unlearne.ttf"))
-   {
-      perror("Error opening file 'unlearne.ttf'");
-      abort();
-   }
-   text.setFont(font);
-   text.setCharacterSize(60);
-   text.setString("PRESS SPACE TO RESTART");
-   text_width = text.getLocalBounds().width;
-   text_height = text.getLocalBounds().height;
-   text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height / 2.0f);
-   window.draw(text);
+   float text_width = intro_text.getLocalBounds().width,
+         text_height = intro_text.getLocalBounds().height;
+   intro_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 3.0f);
+   window.draw(intro_text);
 
-   text.setString("SCORE:");
-   text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 2.5f);
-   window.draw(text);
+   main_text.setString("PRESS SPACE TO RESTART");
+   text_width = main_text.getLocalBounds().width;
+   text_height = main_text.getLocalBounds().height;
+   main_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height / 2.0f);
+   window.draw(main_text);
 
-   text.setString(std::to_string(score));
-   text.setPosition(size.x / 2.0f - text_width / 5.5f, size.y / 2.0f - text_height * 2.5f);
-   window.draw(text);
+   main_text.setString("SCORE:");
+   main_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 2.5f);
+   window.draw(main_text);
+
+   main_text.setString(std::to_string(score));
+   main_text.setPosition(size.x / 2.0f - text_width / 5.5f, size.y / 2.0f - text_height * 2.5f);
+   window.draw(main_text);
 
    if (!is_rec_checked)
    {
@@ -170,21 +146,21 @@ void Drawing::draw_ending(sf::RenderWindow & window, int score, int &record)
    if (is_rec_achieved)
    {
        record = score;
-       text.setString("YOU SET A RECORD!");
-       text_width = text.getLocalBounds().width;
-       text.setPosition(size.x / 2.0f - text_width / 1.5f, size.y / 2.0f - text_height * 4.5f);
-       window.draw(text);
+       main_text.setString("YOU SET A RECORD!");
+       text_width = main_text.getLocalBounds().width;
+       main_text.setPosition(size.x / 2.0f - text_width / 1.5f, size.y / 2.0f - text_height * 4.5f);
+       window.draw(main_text);
    }
    else
    {
-       text.setString("RECORD: ");
-       text_width = text.getLocalBounds().width;
-       text.setPosition(size.x / 2.0f - text_width * 1.45f, size.y / 2.0f - text_height * 4.5f);
-       window.draw(text);
+       main_text.setString("RECORD: ");
+       text_width = main_text.getLocalBounds().width;
+       main_text.setPosition(size.x / 2.0f - text_width * 1.45f, size.y / 2.0f - text_height * 4.5f);
+       window.draw(main_text);
 
-       text.setString(std::to_string(record));
-       text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 4.5f);
-       window.draw(text);
+       main_text.setString(std::to_string(record));
+       main_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 4.5f);
+       window.draw(main_text);
    }
 }
 
@@ -244,13 +220,16 @@ Game::Game()
 Game::~Game()
 { figure_list.clear(); }
 
+void Game::init(sf::RenderWindow &window)
+{ drawing_init(window); }
+
 void Game::intro(sf::RenderWindow &window)
 { draw_intro(window); }
 
 void Game::ending(sf::RenderWindow &window)
 { draw_ending(window, score, record); }
 
-void Game::draw(sf::RenderWindow & window)
+void Game::draw(sf::RenderWindow &window)
 {
    draw_field(window, area);
    draw_figure(window, item, next, coords);
