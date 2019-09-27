@@ -30,7 +30,7 @@ void Drawing::drawing_init(sf::RenderWindow &window)
         abort();
     }
     intro_text.setFont(intro_font);
-    intro_text.setCharacterSize(120);
+    intro_text.setCharacterSize(110);
     intro_text.setFillColor(sf::Color::Black);
     intro_text.setOutlineColor(sf::Color::White);
     intro_text.setOutlineThickness(1.0f);
@@ -99,7 +99,7 @@ void Drawing::draw_intro(sf::RenderWindow &window)
 
    float text_width = intro_text.getLocalBounds().width,
          text_height = intro_text.getLocalBounds().height;
-   intro_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 3.0f);
+   intro_text.setPosition(size.x / 2.0f - text_width / 2.0f - 10, size.y / 2.0f - text_height * 3.0f);
    window.draw(intro_text);
 
    main_text.setString("PRESS SPACE TO START");
@@ -115,7 +115,7 @@ void Drawing::draw_ending(sf::RenderWindow & window, int score, int &record)
 
    float text_width = intro_text.getLocalBounds().width,
          text_height = intro_text.getLocalBounds().height;
-   intro_text.setPosition(size.x / 2.0f - text_width / 2.0f, size.y / 2.0f - text_height * 3.0f);
+   intro_text.setPosition(size.x / 2.0f - text_width / 2.0f - 10, size.y / 2.0f - text_height * 3.0f);
    window.draw(intro_text);
 
    main_text.setString("PRESS SPACE TO RESTART");
