@@ -242,6 +242,9 @@ void Game::set_record(int rec)
 int Game::get_record() const
 { return record; }
 
+int Game::get_score() const
+{ return score; }
+
 void Game::set_coords(moves mode)
 {
    switch (mode)

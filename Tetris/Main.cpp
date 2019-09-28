@@ -75,10 +75,10 @@ int main()
 
     file_path.append(L"Record.bin");
 
-    int rec = 0;
     std::ifstream fin(file_path, std::ios::binary);
     if (fin.is_open())
     {
+        int rec = 0;
         fin >> rec;
         game.set_record(rec);
     }
@@ -151,17 +151,17 @@ int main()
                             std::this_thread::sleep_for(std::chrono::milliseconds(70));
                         }
 
-                        rec = game.get_record();
+                        int sc = game.get_score();
 
-                        if (rec >= 50000)
+                        if (sc >= 50000)
                             speed = 0.35f;
-                        else if (rec >= 40000)
+                        else if (sc >= 40000)
                             speed = 0.4f;
-                        else if (rec >= 30000)
+                        else if (sc >= 30000)
                             speed = 0.45f;
-                        else if (rec >= 20000)
+                        else if (sc >= 20000)
                             speed = 0.5f;
-                        else if (game.get_record() >= 10000)
+                        else if (sc >= 10000)
                             speed = 0.55f;
 
                         t2 = std::chrono::high_resolution_clock::now();
@@ -182,6 +182,7 @@ int main()
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
                 {
                     game.restart();
+                    speed = 0.6f;
                     end = false;
                     fall = false;
                     move = true;

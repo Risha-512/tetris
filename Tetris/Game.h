@@ -58,6 +58,7 @@ public:
 
    void set_record(int rec);
    int get_record() const;
+   int get_score() const;
 
    bool new_figure();                     // set new value to figure item
    void moving(moves type);               // move figure item
