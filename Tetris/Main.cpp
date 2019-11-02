@@ -7,10 +7,9 @@
 #include <filesystem>
 #include <ShlObj.h>
 
-// TODO: figure selection function,
-//       clockwise rotation
+// TODO: clockwise rotation
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 std::wstring get_path()
 {
@@ -61,7 +60,7 @@ int main()
     // set variables
 
     bool start = false, fall = false,
-         end = false, pause = false, move = true;
+            end = false, pause = false, move = true;
 
     std::chrono::high_resolution_clock::time_point t1, t2;
     double speed = 0.6f;
@@ -105,8 +104,6 @@ int main()
                 pause = true;
                 t1 = std::chrono::high_resolution_clock::now();
             }
-            if (event.type == sf::Event::GainedFocus)
-                pause = false;
         }
 
         window.clear(back_color);
@@ -139,13 +136,13 @@ int main()
                         else
                         {
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-                                game.moving(right);
+                                game.moving(moves::right);
                             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-                                game.moving(left);
+                                game.moving(moves::left);
                             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-                                game.moving(down);
+                                game.moving(moves::down);
                             else if (move && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-                                game.moving(rotate);
+                                game.moving(moves::rotate);
                             move = false;
 
                             std::this_thread::sleep_for(std::chrono::milliseconds(70));
